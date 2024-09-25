@@ -4,6 +4,9 @@ import 'package:easy_extension/easy_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:uniuni/common/enums/sso_enum.dart';
+import 'package:uniuni/common/extensions/context_extensions.dart';
+import 'package:uniuni/common/widgets/gradient_divider.dart';
 import 'package:uniuni/config.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -21,8 +24,6 @@ class _LoginScreenState extends State<LoginScreen> {
     borderSide: BorderSide.none,
   );
 
-  final String _email = "202030420@daelim.ac.kr";
-  final _password = "202030420";
   bool _isObscure = true;
 
   @override
@@ -32,40 +33,59 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  // 로그인 api 호출
-  void _onFetchedApi() async {
-    final response = await http.post(Uri.parse(authUrl),
-        body: jsonEncode({
-          'email': _emailController.toString(),
-          'password': _passwordController.toString(),
-        }));
-
-    Log.green({'statusCode': response.statusCode, "body": response.body});
-    return;
-  }
-
   // 패스워드 재설정
   void _onRecoveryPassword() {}
 
   // 로그인
   void _onSignIn() async {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    // TODO: 토큰 관리 준비
+    final loginDate = {
+      'email': email,
+      'password': password,
+    };
+
+    final response = await http.post(
+      Uri.parse(authUrl),
+      body: jsonEncode(loginDate),
+    );
+
+    Log.green({
+      'statusCode': response.statusCode,
+      "body": response.body,
+    });
+
     return;
+  }
+
+  void _onSsoSignIn(SsoEnum type) {
+    switch (type) {
+      case SsoEnum.google:
+        context.buildSnackBarText("준비중인 기능입니다.");
+        break;
+      case SsoEnum.github:
+        context.buildSnackBarText("준비중인 기능입니다.");
+        break;
+      case SsoEnum.apple:
+        context.buildSnackBarText("준비중인 기능입니다.");
+    }
   }
 
   // 타이틀 텍스트 위젯
   List<Widget> _buildTitleText() => [
-        Text(
+        const Text(
           "Hello Again",
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
           ),
         ),
         1.sizedBox,
-        Text(
+        const Text(
           'Wellcome back you\'re\nbeen missed!',
           textAlign: TextAlign.center,
-          style: GoogleFonts.poppins(
+          style: TextStyle(
             fontSize: 16,
           ),
         ),
@@ -122,6 +142,28 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  // sso 버튼 위젯
+  Widget _buildSsoButton({
+    required String iconUrl,
+    VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: 80,
+        height: 60,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.white,
+          ),
+          borderRadius: BorderRadius.circular(6),
+        ),
+        padding: const EdgeInsets.all(10),
+        child: Image.network(iconUrl),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,51 +171,93 @@ class _LoginScreenState extends State<LoginScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: [
-              double.infinity.widthBox,
-              36.heightBox,
-              ..._buildTitleText(),
-              20.heightBox,
-              ..._buildTextFields(),
-              16.heightBox,
-              //Recovery Password
-              Align(
-                alignment: Alignment.centerRight,
-                child: TextButton(
-                  onPressed: _onRecoveryPassword,
-                  child: Text(
-                    "Recovery Password",
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
+          child: DefaultTextStyle(
+            style:
+                GoogleFonts.poppins(color: context.textTheme.bodyMedium?.color),
+            child: Column(
+              children: [
+                double.infinity.widthBox,
+                36.heightBox,
+                ..._buildTitleText(),
+                20.heightBox,
+                ..._buildTextFields(),
+                16.heightBox,
+                //Recovery Password
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: _onRecoveryPassword,
+                    child: const Text(
+                      "Recovery Password",
+                      style: TextStyle(
+                        fontSize: 12,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              16.heightBox,
-              //Sign in
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _onSignIn,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 20,
-                    ),
-                    backgroundColor: const Color(0xffe46a61),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: Text(
-                    "Sign in",
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      color: Colors.white,
+                16.heightBox,
+                //Sign in
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _onSignIn,
+                    style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 20,
+                        ),
+                        backgroundColor: const Color(0xffe46a61),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12)),
+                        shadowColor: const Color(0xffe46a61)),
+                    child: const Text(
+                      "Sign in",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+                40.heightBox,
+                Row(
+                  children: [
+                    const Expanded(
+                      child: GradientDivider(),
+                    ),
+                    15.widthBox,
+                    const Text("Or continue with"),
+                    15.widthBox,
+                    const Expanded(
+                      child: GradientDivider(
+                        reverse: true,
+                        width: 70,
+                      ),
+                    ),
+                  ],
+                ),
+                40.heightBox,
+                // sso Buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildSsoButton(
+                      iconUrl: icGoogle,
+                      onTap: () => _onSsoSignIn(SsoEnum.google),
+                    ),
+                    _buildSsoButton(
+                      iconUrl: icApple,
+                      onTap: () => _onSsoSignIn(SsoEnum.apple),
+                    ),
+                    _buildSsoButton(
+                      iconUrl: icGithub,
+                      onTap: () => _onSsoSignIn(SsoEnum.github),
+                    ),
+                  ],
+                ),
+                40.heightBox,
+                const Text("Not a member?")
+              ],
+            ),
           ),
         ),
       ),
