@@ -2,12 +2,15 @@ import 'dart:convert';
 
 import 'package:easy_extension/easy_extension.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:uniuni/common/enums/sso_enum.dart';
 import 'package:uniuni/common/extensions/context_extensions.dart';
+import 'package:uniuni/common/helpers/storage_helper.dart';
 import 'package:uniuni/common/widgets/gradient_divider.dart';
 import 'package:uniuni/config.dart';
+import 'package:uniuni/models/auth_data.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -51,10 +54,24 @@ class _LoginScreenState extends State<LoginScreen> {
       body: jsonEncode(loginDate),
     );
 
-    Log.green({
-      'statusCode': response.statusCode,
-      "body": response.body,
-    });
+    final statuscode = response.statusCode;
+    final body = utf8.decode(response.bodyBytes);
+    if (statuscode != 200) {
+      if (mounted) {
+        return context.buildSnackBar(
+          content: Text(body),
+        );
+      }
+    }
+
+    final authData = AuthData.fromMap(jsonDecode(body));
+
+    await StorageHelper.setAuthData(authData);
+
+    final saveAuth = StorageHelper.authData;
+    //변환
+
+    Log.black(saveAuth);
 
     return;
   }
@@ -174,89 +191,94 @@ class _LoginScreenState extends State<LoginScreen> {
           child: DefaultTextStyle(
             style:
                 GoogleFonts.poppins(color: context.textTheme.bodyMedium?.color),
-            child: Column(
-              children: [
-                double.infinity.widthBox,
-                36.heightBox,
-                ..._buildTitleText(),
-                20.heightBox,
-                ..._buildTextFields(),
-                16.heightBox,
-                //Recovery Password
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: _onRecoveryPassword,
-                    child: const Text(
-                      "Recovery Password",
-                      style: TextStyle(
-                        fontSize: 12,
-                      ),
-                    ),
-                  ),
-                ),
-                16.heightBox,
-                //Sign in
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _onSignIn,
-                    style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 20,
+            child: Center(
+              child: SizedBox(
+                width: 300,
+                child: Column(
+                  children: [
+                    double.infinity.widthBox,
+                    36.heightBox,
+                    ..._buildTitleText(),
+                    20.heightBox,
+                    ..._buildTextFields(),
+                    16.heightBox,
+                    //Recovery Password
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: TextButton(
+                        onPressed: _onRecoveryPassword,
+                        child: const Text(
+                          "Recovery Password",
+                          style: TextStyle(
+                            fontSize: 12,
+                          ),
                         ),
-                        backgroundColor: const Color(0xffe46a61),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12)),
-                        shadowColor: const Color(0xffe46a61)),
-                    child: const Text(
-                      "Sign in",
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Colors.white,
                       ),
                     ),
-                  ),
-                ),
-                40.heightBox,
-                Row(
-                  children: [
-                    const Expanded(
-                      child: GradientDivider(),
-                    ),
-                    15.widthBox,
-                    const Text("Or continue with"),
-                    15.widthBox,
-                    const Expanded(
-                      child: GradientDivider(
-                        reverse: true,
-                        width: 70,
+                    16.heightBox,
+                    //Sign in
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: _onSignIn,
+                        style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 20,
+                            ),
+                            backgroundColor: const Color(0xffe46a61),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
+                            shadowColor: const Color(0xffe46a61)),
+                        child: const Text(
+                          "Sign in",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
+                    40.heightBox,
+                    Row(
+                      children: [
+                        const Expanded(
+                          child: GradientDivider(),
+                        ),
+                        15.widthBox,
+                        const Text("Or continue with"),
+                        15.widthBox,
+                        const Expanded(
+                          child: GradientDivider(
+                            reverse: true,
+                            width: 70,
+                          ),
+                        ),
+                      ],
+                    ),
+                    40.heightBox,
+                    // sso Buttons
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        _buildSsoButton(
+                          iconUrl: icGoogle,
+                          onTap: () => _onSsoSignIn(SsoEnum.google),
+                        ),
+                        _buildSsoButton(
+                          iconUrl: icApple,
+                          onTap: () => _onSsoSignIn(SsoEnum.apple),
+                        ),
+                        _buildSsoButton(
+                          iconUrl: icGithub,
+                          onTap: () => _onSsoSignIn(SsoEnum.github),
+                        ),
+                      ],
+                    ),
+                    40.heightBox,
+                    const Text("Not a member?")
                   ],
                 ),
-                40.heightBox,
-                // sso Buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildSsoButton(
-                      iconUrl: icGoogle,
-                      onTap: () => _onSsoSignIn(SsoEnum.google),
-                    ),
-                    _buildSsoButton(
-                      iconUrl: icApple,
-                      onTap: () => _onSsoSignIn(SsoEnum.apple),
-                    ),
-                    _buildSsoButton(
-                      iconUrl: icGithub,
-                      onTap: () => _onSsoSignIn(SsoEnum.github),
-                    ),
-                  ],
-                ),
-                40.heightBox,
-                const Text("Not a member?")
-              ],
+              ),
             ),
           ),
         ),
