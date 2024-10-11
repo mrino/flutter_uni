@@ -20,4 +20,9 @@ class StorageHelper {
 
     return data != null ? AuthData.fromJson(data) : null;
   }
+
+  // authdata 삭제
+  static Future<bool> removeAuthData() {
+    return _prefs.remove(_authKey);
+  }
 }

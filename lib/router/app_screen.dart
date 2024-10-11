@@ -1,15 +1,31 @@
-enum AppScren {
+import 'package:flutter/material.dart';
+
+enum AppScreen {
   login,
   main,
+  setting,
 }
 
-extension AppScreenExtension on AppScren {
+extension AppScreenExtension on AppScreen {
   String get toPath {
     switch (this) {
-      case AppScren.login:
-        return '/login';
-      case AppScren.main:
+      case AppScreen.main:
         return '/main';
+      case AppScreen.login:
+        return '/login';
+      case AppScreen.setting:
+        return '/setting';
+    }
+  }
+
+  IconData get getIcon {
+    switch (this) {
+      case AppScreen.main:
+        return Icons.home;
+      case AppScreen.setting:
+        return Icons.settings;
+      default:
+        return Icons.abc;
     }
   }
 }

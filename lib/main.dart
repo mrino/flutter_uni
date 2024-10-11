@@ -1,9 +1,7 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:uniuni/common/helpers/storage_helper.dart';
 import 'package:uniuni/router/app_router.dart';
-import 'package:uniuni/screens/login/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // 비동기 초기화를 위해 필요

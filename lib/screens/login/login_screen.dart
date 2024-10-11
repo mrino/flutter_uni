@@ -11,6 +11,7 @@ import 'package:uniuni/common/helpers/storage_helper.dart';
 import 'package:uniuni/common/widgets/gradient_divider.dart';
 import 'package:uniuni/config.dart';
 import 'package:uniuni/models/auth_data.dart';
+import 'package:uniuni/router/app_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -50,7 +51,7 @@ class _LoginScreenState extends State<LoginScreen> {
     };
 
     final response = await http.post(
-      Uri.parse(authUrl),
+      Uri.parse(getTokenUrl),
       body: jsonEncode(loginDate),
     );
 
@@ -72,6 +73,9 @@ class _LoginScreenState extends State<LoginScreen> {
     //변환
 
     Log.black(saveAuth);
+
+    // 화면 이동
+    if (mounted) context.goNamed(AppScreen.main.name);
 
     return;
   }
