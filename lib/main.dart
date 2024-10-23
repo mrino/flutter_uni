@@ -6,6 +6,7 @@ import 'package:uniuni/router/app_router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // 비동기 초기화를 위해 필요
   await StorageHelper.init();
+
   runApp(const MyApp());
 }
 
