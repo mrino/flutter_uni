@@ -2,7 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:uniuni/common/helpers/storage_helper.dart';
 import 'package:uniuni/router/app_screen.dart';
 import 'package:uniuni/screens/login/login_screen.dart';
-import 'package:uniuni/screens/main/main_screen.dart';
+import 'package:uniuni/screens/users/users_screen.dart';
 import 'package:uniuni/screens/setting/setting_screen.dart';
 
 final appRouter = GoRouter(
@@ -25,10 +25,10 @@ final appRouter = GoRouter(
     ),
     //메인 화면
     GoRoute(
-      path: AppScreen.main.toPath,
-      name: AppScreen.main.name,
+      path: AppScreen.users.toPath,
+      name: AppScreen.users.name,
       pageBuilder: (context, state) => const NoTransitionPage(
-        child: MainScreen(),
+        child: UsersScreen(),
       ),
     ),
     GoRoute(

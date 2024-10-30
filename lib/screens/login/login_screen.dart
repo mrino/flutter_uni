@@ -75,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
     Log.black(saveAuth);
 
     // 화면 이동
-    if (mounted) context.goNamed(AppScreen.main.name);
+    if (mounted) context.goNamed(AppScreen.users.name);
 
     return;
   }

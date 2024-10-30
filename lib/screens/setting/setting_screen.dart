@@ -5,11 +5,13 @@ import 'package:easy_extension/easy_extension.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:mime/mime.dart';
 import 'package:uniuni/common/helpers/storage_helper.dart';
 import 'package:uniuni/common/scaffold/app_scaffold.dart';
 import 'package:uniuni/config.dart';
 import 'package:uniuni/router/app_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -72,10 +74,19 @@ class _SettingScreenState extends State<SettingScreen> {
     if (result == null) return;
 
     final imageFile = result.files.single;
-    final imageBytes = imageFile.bytes;
+    // final imageBytes = imageFile.bytes;
+    final imageName = imageFile.name;
     final imagePath = imageFile.path;
+    final imageMime = lookupMimeType(imageName) ?? 'image/jpeg'; // image/jpeg
 
-    Log.black(imagePath);
+    // mime 타입  자르기
+    final mimeSplit = imageMime.split("/");
+    final mimeType = mimeSplit.first;
+    final mimeSubType = mimeSplit.last;
+
+    Log.black(
+      "프로필이미지 업로드: $imageName, $imageMime (${mimeSplit.first}, ${mimeSplit.last})",
+    );
 
     final token = StorageHelper.authData!.accessToken;
     final tokenType = StorageHelper.authData!.tokenType.firstUpperCase;
@@ -89,19 +100,19 @@ class _SettingScreenState extends State<SettingScreen> {
       ..headers.addAll({
         HttpHeaders.authorizationHeader: '$tokenType $token',
       })
-      ..files.add(await http.MultipartFile.fromPath(
-        'image',
-        imagePath,
-      ));
+      ..files.add(await http.MultipartFile.fromPath('image', imagePath,
+          // contentType: MediaType(mimeType, mimeSubType),
+          contentType: MediaType.parse(imageMime)));
     final response = await uploadRequest.send();
+    final uploadResult = await http.Response.fromStream(response);
 
-    if (response.statusCode != 200) {
+    Log.green("이미지 업로드 결과 ${uploadResult.statusCode}, ${uploadResult.body}");
+    if (uploadResult.statusCode != 200) {
       Log.red("프로필 이미지 업로드 에러");
       return;
     }
-    setState(() {
-      _fetchUserData();
-    });
+
+    _fetchUserData();
   }
 
   @override
