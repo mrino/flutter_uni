@@ -9,7 +9,7 @@ const String _storagePublicUrl =
 
 // 아이콘 url
 const String icGoogle = "$_storagePublicUrl/icons/google.png";
-const String icApple = "$_storagePublicUrl/public/icons/apple.png";
+const String icApple = "$_storagePublicUrl/icons/apple.png";
 const String icGithub = "$_storagePublicUrl/icons/github.png";
 //기본 이미지
 const String defulatImg = "$_storagePublicUrl/icons/user.png";
