@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:uniuni/common/enums/sso_enum.dart';
 import 'package:uniuni/common/extensions/context_extensions.dart';
+import 'package:uniuni/common/helpers/api_helper.dart';
 import 'package:uniuni/common/helpers/storage_helper.dart';
 import 'package:uniuni/common/widgets/gradient_divider.dart';
 import 'package:uniuni/config.dart';
@@ -44,30 +45,19 @@ class _LoginScreenState extends State<LoginScreen> {
   void _onSignIn() async {
     final email = _emailController.text;
     final password = _passwordController.text;
+
     // TODO: 토큰 관리 준비
-    final loginDate = {
-      'email': email,
-      'password': password,
-    };
+    final authData = await ApiHelper.signIn(email: email, password: password);
 
-    final response = await http.post(
-      Uri.parse(getTokenUrl),
-      body: jsonEncode(loginDate),
-    );
-
-    final statuscode = response.statusCode;
-    final body = utf8.decode(response.bodyBytes);
-    if (statuscode != 200) {
+    if (authData == null) {
       if (mounted) {
         return context.buildSnackBar(
-          content: Text(body),
+          content: const Text("로그인 실패했습니다"),
         );
       }
     }
 
-    final authData = AuthData.fromMap(jsonDecode(body));
-
-    await StorageHelper.setAuthData(authData);
+    await StorageHelper.setAuthData(authData!);
 
     final saveAuth = StorageHelper.authData;
     //변환

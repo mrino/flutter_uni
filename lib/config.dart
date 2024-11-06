@@ -3,6 +3,7 @@ const String _baseUrl = "https://daelim-server.fleecy.dev/functions/v1";
 const String getTokenUrl = '$_baseUrl/auth/get-token';
 const String getUserDataUrl = '$_baseUrl/auth/my-data';
 const String setProfileImageUrl = '$_baseUrl/auth/set-profile-image';
+const String changePasswordUrl = '$_baseUrl/auth/reset-password';
 
 const String _storagePublicUrl =
     'https://daelim-server.fleecy.dev/storage/v1/object/public';
