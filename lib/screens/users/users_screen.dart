@@ -1,3 +1,4 @@
+import 'package:uniuni/common/helpers/api_helper.dart';
 import 'package:uniuni/common/scaffold/app_scaffold.dart';
 import 'package:uniuni/config.dart';
 import 'package:uniuni/models/user_data.dart';
@@ -22,10 +23,11 @@ class _UsersScreenState extends State<UsersScreen> {
       name: '유저 $index',
       email: '$index@daelim.ac.kr',
       studentNumber: '$index',
-      profileImageUrl: defulatImg,
+      profileImageUrl: Config.image.defulatImg,
     );
   });
-  List<UserData> _searchedDataList = [];
+  List<UserData> _users = [];
+  List<UserData> _searcheduserList = [];
 
   final _defaultInputBorder = const OutlineInputBorder(
     borderSide: BorderSide(
@@ -39,13 +41,24 @@ class _UsersScreenState extends State<UsersScreen> {
   @override
   void initState() {
     super.initState();
-    _searchedDataList = _dummyDataList;
+    // _searchedDataList = _dummyDataList;
+    // _searchedDataList = _fetchUserData;
+    _fetchUserData();
+  }
+
+  // 유저 목록 가져오기
+  Future<void> _fetchUserData() async {
+    _users = await ApiHelper.fetchUserList();
+    Log.black(_users.length);
+    setState(() {
+      _searcheduserList = _users;
+    });
   }
 
   // NOTE: 유저 검색
   void _onSearch(String value) {
     setState(() {
-      _searchedDataList = _dummyDataList
+      _searcheduserList = _users
           .where(
             (e) => e.name.toLowerCase().contains(value.toLowerCase()),
           )
@@ -55,6 +68,7 @@ class _UsersScreenState extends State<UsersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var userCount = _searcheduserList.length;
     return AppScaffold(
       appScren: AppScreen.users,
       child: Column(
@@ -66,9 +80,9 @@ class _UsersScreenState extends State<UsersScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // NOTE: 유저 목록 타이틀
-                const Text(
-                  '유저 목록',
-                  style: TextStyle(
+                Text(
+                  '유저 목록 ($userCount)',
+                  style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 28,
                   ),
@@ -95,7 +109,7 @@ class _UsersScreenState extends State<UsersScreen> {
             ),
           ),
           const Divider(),
-          if (_searchedDataList.isEmpty)
+          if (_searcheduserList.isEmpty)
             // NOTE: 검색 결과 없음
             Container(
               alignment: Alignment.center,
@@ -109,10 +123,10 @@ class _UsersScreenState extends State<UsersScreen> {
             // NOTE: 유저 리스트뷰
             Expanded(
               child: ListView.separated(
-                itemCount: _searchedDataList.length,
+                itemCount: _searcheduserList.length,
                 separatorBuilder: (context, index) => const Divider(),
                 itemBuilder: (context, index) {
-                  final dummy = _searchedDataList[index];
+                  final dummy = _searcheduserList[index];
 
                   return ListTile(
                     leading: CircleAvatar(

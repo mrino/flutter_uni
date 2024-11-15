@@ -1,10 +1,18 @@
+import 'dart:convert';
+
 import 'package:easy_extension/easy_extension.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:uniuni/common/extensions/context_extensions.dart';
 import 'package:uniuni/common/helpers/api_helper.dart';
 import 'package:uniuni/common/helpers/storage_helper.dart';
+import 'package:uniuni/common/scaffold/app_navigation_rail.dart';
+import 'package:uniuni/config.dart';
+import 'package:uniuni/router/app_router.dart';
+import 'package:uniuni/router/app_screen.dart';
 import 'package:uniuni/screens/login/login_screen.dart';
+import 'package:http/http.dart' as http;
 
 class ChangePasswordDialog extends StatefulWidget {
   const ChangePasswordDialog({super.key});
@@ -30,7 +38,7 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
   String currentPwValidateMsg = '';
 
   String? _validator(String? value) {
-    if (value == null || value.isEmpty) {
+    if (value == null || value.isEmpty || value.trim().isEmpty) {
       return "이 입력란을 작성하세요";
     }
     return null;
@@ -60,6 +68,24 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
       });
     }
     Log.green("비밀번호 변경시작");
+
+    final (success, err) = await ApiHelper.changePassword(newPw);
+    if (!success) {
+      Log.red(err);
+      if (mounted) {
+        return context.buildSnackBarText("비밀번호를 변경할수없습니다");
+      }
+      return;
+    }
+
+    await StorageHelper.removeAuthData();
+    if (mounted) {
+      context.buildSnackBarText(
+        "비밀번호를 변경했습니다. 다시 입력해주세요.",
+      );
+      context.pushReplacementNamed(AppScreen.login.name);
+    }
+    return;
   }
 
   //공용위젯
@@ -160,7 +186,20 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
                       ),
                     ),
                     _buildTextField(
-                      validator: _validator,
+                      validator: (value) {
+                        final isEmptyValidate = _validator(value);
+                        if (isEmptyValidate != null) {
+                          return isEmptyValidate;
+                        }
+                        final newPw = _newPwController.text;
+                        if (value!.length < 6) {
+                          return "6글자 이상이어야 합니다.";
+                        }
+                        if (value != newPw) {
+                          return "비밀번호가 일치하지 않습니다";
+                        }
+                        return null;
+                      },
                       hint: "새 비밀번호",
                       key: _newFromPwKey,
                       textController: _newPwController,

@@ -4,6 +4,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 enum AppScreen {
   login,
   users,
+  chattingRooms,
   setting,
 }
 
@@ -14,6 +15,8 @@ extension AppScreenExtension on AppScreen {
         return '/users';
       case AppScreen.login:
         return '/login';
+      case AppScreen.chattingRooms:
+        return '/rooms';
       case AppScreen.setting:
         return '/setting';
     }
@@ -23,6 +26,8 @@ extension AppScreenExtension on AppScreen {
     switch (this) {
       case AppScreen.users:
         return LucideIcons.users;
+      case AppScreen.chattingRooms:
+        return LucideIcons.messageCircleMore;
       case AppScreen.setting:
         return LucideIcons.settings;
       default:

@@ -255,15 +255,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         _buildSsoButton(
-                          iconUrl: icGoogle,
+                          iconUrl: Config.icon.icGoogle,
                           onTap: () => _onSsoSignIn(SsoEnum.google),
                         ),
                         _buildSsoButton(
-                          iconUrl: icApple,
+                          iconUrl: Config.icon.icApple,
                           onTap: () => _onSsoSignIn(SsoEnum.apple),
                         ),
                         _buildSsoButton(
-                          iconUrl: icGithub,
+                          iconUrl: Config.icon.icGithub,
                           onTap: () => _onSsoSignIn(SsoEnum.github),
                         ),
                       ],

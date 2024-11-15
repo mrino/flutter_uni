@@ -4,10 +4,12 @@ import 'package:uniuni/router/app_screen.dart';
 
 class AppScaffold extends StatelessWidget {
   final AppScreen appScren;
+  final PreferredSizeWidget? appBar;
   final Widget child;
   const AppScaffold({
     super.key,
     required this.appScren,
+    this.appBar,
     required this.child,
   });
 
@@ -17,6 +19,7 @@ class AppScaffold extends StatelessWidget {
       body: SafeArea(
         child: Row(
           children: [
+            if (appBar != null) appBar!,
             AppNavigationRail(
               appScren: appScren,
             ),

@@ -2,6 +2,7 @@ import 'package:go_router/go_router.dart';
 import 'package:uniuni/common/helpers/storage_helper.dart';
 import 'package:uniuni/router/app_screen.dart';
 import 'package:uniuni/screens/login/login_screen.dart';
+import 'package:uniuni/screens/rooms/rooms_screen.dart';
 import 'package:uniuni/screens/users/users_screen.dart';
 import 'package:uniuni/screens/setting/setting_screen.dart';
 
@@ -29,6 +30,14 @@ final appRouter = GoRouter(
       name: AppScreen.users.name,
       pageBuilder: (context, state) => const NoTransitionPage(
         child: UsersScreen(),
+      ),
+    ),
+    //채팅 화면 목록
+    GoRoute(
+      path: AppScreen.chattingRooms.toPath,
+      name: AppScreen.chattingRooms.name,
+      pageBuilder: (context, state) => const NoTransitionPage(
+        child: RoomsScreen(),
       ),
     ),
     GoRoute(
