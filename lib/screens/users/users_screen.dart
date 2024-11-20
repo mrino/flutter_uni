@@ -1,11 +1,14 @@
+import 'package:go_router/go_router.dart';
+import 'package:uniuni/api_err.dart';
+import 'package:uniuni/common/extensions/context_extensions.dart';
 import 'package:uniuni/common/helpers/api_helper.dart';
 import 'package:uniuni/common/scaffold/app_scaffold.dart';
-import 'package:uniuni/config.dart';
 import 'package:uniuni/models/user_data.dart';
 import 'package:uniuni/router/app_screen.dart';
 import 'package:easy_extension/easy_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:uniuni/screens/users/widgets/user_item.dart';
 
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
@@ -15,17 +18,16 @@ class UsersScreen extends StatefulWidget {
 }
 
 class _UsersScreenState extends State<UsersScreen> {
-  final List<UserData> _dummyDataList = List.generate(20, (i) {
-    final index = i + 1;
-
-    return UserData(
-      id: '$index',
-      name: '유저 $index',
-      email: '$index@daelim.ac.kr',
-      studentNumber: '$index',
-      profileImageUrl: Config.image.defulatImg,
-    );
-  });
+  // final List<UserData> _dummyDataList = List.generate(20, (i) {
+  //   final index = i + 1;
+  //   return UserData(
+  //     id: '$index',
+  //     name: '유저 $index',
+  //     email: '$index@daelim.ac.kr',
+  //     studentNumber: '$index',
+  //     profileImageUrl: Config.image.defulatImg,
+  //   );
+  // });
   List<UserData> _users = [];
   List<UserData> _searcheduserList = [];
 
@@ -64,6 +66,26 @@ class _UsersScreenState extends State<UsersScreen> {
           )
           .toList();
     });
+  }
+
+  // NOTE: 채팅 생성
+  Future _onCreateRoom(UserData user) async {
+    // Log.cyan(user.name);
+    final (code, err) = await ApiHelper.createRoom(user.id);
+    Log.black("$code $err");
+
+    if (code == ApiErr.createChatRoom.success) {
+    } else if (code == ApiErr.createChatRoom.requiredUserId) {
+    } else if (code == ApiErr.createChatRoom.cannotMyself) {
+    } else if (code == ApiErr.createChatRoom.notFound) {
+    } else if (code == ApiErr.createChatRoom.onlyCanChatBot) {
+    } else if (code == ApiErr.createChatRoom.alreadyRoom) {}
+
+    // if (code != 200) {
+    //   context.buildSnackBarText(err);
+    // }
+
+    // 채팅방 개설 성공
   }
 
   @override
@@ -126,23 +148,9 @@ class _UsersScreenState extends State<UsersScreen> {
                 itemCount: _searcheduserList.length,
                 separatorBuilder: (context, index) => const Divider(),
                 itemBuilder: (context, index) {
-                  final dummy = _searcheduserList[index];
+                  final user = _searcheduserList[index];
 
-                  return ListTile(
-                    leading: CircleAvatar(
-                      backgroundColor: const Color(0xFFEAEAEA),
-                      foregroundImage: NetworkImage(
-                        dummy.profileImageUrl,
-                      ),
-                    ),
-                    title: Text(
-                      dummy.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(dummy.studentNumber),
-                  );
+                  return UserItem(user: user, onTap: () => _onCreateRoom(user));
                 },
               ),
             ),

@@ -78,14 +78,8 @@ class _ChangePasswordDialogState extends State<ChangePasswordDialog> {
       return;
     }
 
-    await StorageHelper.removeAuthData();
-    if (mounted) {
-      context.buildSnackBarText(
-        "비밀번호를 변경했습니다. 다시 입력해주세요.",
-      );
-      context.pushReplacementNamed(AppScreen.login.name);
-    }
-    return;
+    if (!mounted) return;
+    ApiHelper.signOut(context);
   }
 
   //공용위젯

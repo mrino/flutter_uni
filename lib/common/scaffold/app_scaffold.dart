@@ -19,13 +19,15 @@ class AppScaffold extends StatelessWidget {
       body: SafeArea(
         child: Row(
           children: [
-            if (appBar != null) appBar!,
-            AppNavigationRail(
-              appScren: appScren,
-            ),
+            AppNavigationRail(appScren: appScren),
             Expanded(
-              child: child,
-            )
+              child: Column(
+                children: [
+                  if (appBar != null) appBar!,
+                  Expanded(child: child),
+                ],
+              ),
+            ),
           ],
         ),
       ),

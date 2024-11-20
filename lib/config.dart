@@ -20,5 +20,6 @@ class Config {
     setProfileImageUrl: '$_baseFuctionUrl/auth/set-profile-image',
     changePasswordUrl: '$_baseFuctionUrl/auth/reset-password',
     getUserList: '$_baseFuctionUrl/users',
+    createRoom: '$_baseFuctionUrl/chat/room/create'
   );
 }
