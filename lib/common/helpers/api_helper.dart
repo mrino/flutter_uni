@@ -130,8 +130,11 @@ class ApiHelper {
 
     final bodyJson = jsonDecode(body);
     final int code = bodyJson['code'] ?? 404;
-    final String msg = bodyJson['message'] ?? '';
+    final Map<String, dynamic> message = bodyJson['message'] ?? {};
+    final String roomId = message["room_id"] ?? "";
 
-    return (code, msg);
+    return (code, roomId);
   }
+
+  static Future<void> chatRoom() async {}
 }

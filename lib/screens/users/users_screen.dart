@@ -8,6 +8,7 @@ import 'package:uniuni/router/app_screen.dart';
 import 'package:easy_extension/easy_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
+import 'package:uniuni/screens/chat/chat_screen.dart';
 import 'package:uniuni/screens/users/widgets/user_item.dart';
 
 class UsersScreen extends StatefulWidget {
@@ -71,21 +72,30 @@ class _UsersScreenState extends State<UsersScreen> {
   // NOTE: 채팅 생성
   Future _onCreateRoom(UserData user) async {
     // Log.cyan(user.name);
-    final (code, err) = await ApiHelper.createRoom(user.id);
-    Log.black("$code $err");
+    final (code, roomId) = await ApiHelper.createRoom(user.id);
+    switch (code) {
+      case 200:
+        // 채팅방 개설 성공
+        Log.green("채팅방 개설 완료 $roomId");
 
-    if (code == ApiErr.createChatRoom.success) {
-    } else if (code == ApiErr.createChatRoom.requiredUserId) {
-    } else if (code == ApiErr.createChatRoom.cannotMyself) {
-    } else if (code == ApiErr.createChatRoom.notFound) {
-    } else if (code == ApiErr.createChatRoom.onlyCanChatBot) {
-    } else if (code == ApiErr.createChatRoom.alreadyRoom) {}
-
-    // if (code != 200) {
-    //   context.buildSnackBarText(err);
-    // }
-
-    // 채팅방 개설 성공
+        break;
+      case 1001:
+        return context.buildSnackBarText('상대방 id 필수');
+      case 1002:
+        return context.buildSnackBarText('자신과 대화 불가');
+      case 1003:
+        return context.buildSnackBarText('상대방이 없음');
+      case 1004:
+        return context.buildSnackBarText('챗봇계정만 대화 가능');
+      case 1005:
+        //이미 생성된 채팅방이 있습니다
+        Log.green("채팅방이 이미 개설되어 있음 $roomId");
+        context.pushNamed(AppScreen.chat.name, pathParameters: {
+          "roomId": roomId,
+        });
+        break;
+      default:
+    }
   }
 
   @override

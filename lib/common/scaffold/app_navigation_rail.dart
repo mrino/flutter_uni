@@ -18,6 +18,7 @@ class AppNavigationRail extends StatelessWidget {
   Widget build(BuildContext context) {
     final screens = List<AppScreen>.from(AppScreen.values);
     screens.removeAt(0);
+    screens.removeAt(0);
 
     return Column(
       children: [
@@ -28,7 +29,7 @@ class AppNavigationRail extends StatelessWidget {
               final screen = screens[value];
               context.pushNamed(screen.name);
             },
-            selectedIndex: appScren.index - 1,
+            selectedIndex: (appScren.index - 1).clamp(0, screens.length - 1),
             destinations: screens.map((e) {
               return NavigationRailDestination(
                 icon: Icon(e.getIcon),

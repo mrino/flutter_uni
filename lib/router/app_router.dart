@@ -1,6 +1,8 @@
+import 'package:easy_extension/easy_extension.dart';
 import 'package:go_router/go_router.dart';
 import 'package:uniuni/common/helpers/storage_helper.dart';
 import 'package:uniuni/router/app_screen.dart';
+import 'package:uniuni/screens/chat/chat_screen.dart';
 import 'package:uniuni/screens/login/login_screen.dart';
 import 'package:uniuni/screens/rooms/rooms_screen.dart';
 import 'package:uniuni/screens/users/users_screen.dart';
@@ -39,6 +41,18 @@ final appRouter = GoRouter(
       pageBuilder: (context, state) => const NoTransitionPage(
         child: RoomsScreen(),
       ),
+    ),
+    //채팅
+    GoRoute(
+      path: "${AppScreen.chat.toPath}/:roomId",
+      name: AppScreen.chat.name,
+      pageBuilder: (context, state) {
+        final roomId = state.pathParameters['roomId'];
+        Log.black(roomId);
+        return NoTransitionPage(
+          child: ChatScreen(roomId: roomId!),
+        );
+      },
     ),
     GoRoute(
       path: AppScreen.setting.toPath,

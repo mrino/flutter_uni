@@ -3,6 +3,7 @@ import 'package:lucide_icons_flutter/lucide_icons.dart';
 
 enum AppScreen {
   login,
+  chat,
   users,
   chattingRooms,
   setting,
@@ -17,6 +18,8 @@ extension AppScreenExtension on AppScreen {
         return '/login';
       case AppScreen.chattingRooms:
         return '/rooms';
+      case AppScreen.chat:
+        return '/chat';
       case AppScreen.setting:
         return '/setting';
     }
