@@ -2,12 +2,14 @@
 import 'dart:convert';
 
 class AuthData {
+  final String userId;
   final String email;
   final String accessToken;
   final String tokenType;
   final DateTime expiresAt; // expires_in 필드를 제거하고 expiresAt만 남깁니다.
 
   AuthData({
+    required this.userId,
     required this.email,
     required this.accessToken,
     required this.tokenType,
@@ -15,12 +17,14 @@ class AuthData {
   });
 
   AuthData copyWith({
+    String? userId,
     String? email,
     String? accessToken,
     String? tokenType,
     DateTime? expiresAt,
   }) {
     return AuthData(
+      userId: userId ?? this.userId,
       email: email ?? this.email,
       accessToken: accessToken ?? this.accessToken,
       tokenType: tokenType ?? this.tokenType,
@@ -30,6 +34,7 @@ class AuthData {
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'user_id': userId,
       'email': email,
       'access_token': accessToken,
       'token_type': tokenType,
@@ -39,6 +44,7 @@ class AuthData {
 
   factory AuthData.fromMap(Map<String, dynamic> map) {
     return AuthData(
+      userId: map['user_id'],
       email: map['email'] as String,
       accessToken: map['access_token'],
       tokenType: map['token_type'],

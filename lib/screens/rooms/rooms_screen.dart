@@ -1,6 +1,4 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:uniuni/common/helpers/api_helper.dart';
 import 'package:uniuni/common/scaffold/app_scaffold.dart';
 import 'package:uniuni/router/app_screen.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';

@@ -1,17 +1,13 @@
-import 'dart:convert';
-
 import 'package:easy_extension/easy_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:uniuni/common/enums/sso_enum.dart';
 import 'package:uniuni/common/extensions/context_extensions.dart';
 import 'package:uniuni/common/helpers/api_helper.dart';
 import 'package:uniuni/common/helpers/storage_helper.dart';
 import 'package:uniuni/common/widgets/gradient_divider.dart';
 import 'package:uniuni/config.dart';
-import 'package:uniuni/models/auth_data.dart';
 import 'package:uniuni/router/app_screen.dart';
 
 class LoginScreen extends StatefulWidget {

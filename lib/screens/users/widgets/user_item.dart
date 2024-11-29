@@ -1,4 +1,3 @@
-import 'package:easy_extension/easy_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:uniuni/models/user_data.dart';
 

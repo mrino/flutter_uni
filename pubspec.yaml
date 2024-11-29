@@ -26,7 +26,8 @@ dependencies:
   http:
   shared_preferences: ^2.3.3
   http_parser:
-  mime:
+  mime: ^1.0.6
+  supabase_flutter: ^2.8.1
 
 dev_dependencies:
   flutter_test:

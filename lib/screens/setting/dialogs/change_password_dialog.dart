@@ -1,18 +1,8 @@
-import 'dart:convert';
-
 import 'package:easy_extension/easy_extension.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:uniuni/common/extensions/context_extensions.dart';
 import 'package:uniuni/common/helpers/api_helper.dart';
 import 'package:uniuni/common/helpers/storage_helper.dart';
-import 'package:uniuni/common/scaffold/app_navigation_rail.dart';
-import 'package:uniuni/config.dart';
-import 'package:uniuni/router/app_router.dart';
-import 'package:uniuni/router/app_screen.dart';
-import 'package:uniuni/screens/login/login_screen.dart';
-import 'package:http/http.dart' as http;
 
 class ChangePasswordDialog extends StatefulWidget {
   const ChangePasswordDialog({super.key});

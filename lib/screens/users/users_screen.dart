@@ -1,5 +1,4 @@
 import 'package:go_router/go_router.dart';
-import 'package:uniuni/api_err.dart';
 import 'package:uniuni/common/extensions/context_extensions.dart';
 import 'package:uniuni/common/helpers/api_helper.dart';
 import 'package:uniuni/common/scaffold/app_scaffold.dart';
@@ -8,7 +7,6 @@ import 'package:uniuni/router/app_screen.dart';
 import 'package:easy_extension/easy_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:lucide_icons_flutter/lucide_icons.dart';
-import 'package:uniuni/screens/chat/chat_screen.dart';
 import 'package:uniuni/screens/users/widgets/user_item.dart';
 
 class UsersScreen extends StatefulWidget {
